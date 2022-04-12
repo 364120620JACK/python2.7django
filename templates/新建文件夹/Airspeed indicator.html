@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" dir="ltr">
+
+<head>
+    <title>Airspeed Indicator</title>
+    <script src="static/js/jquery-1.11.3.js"></script>
+    <!-- <script src="js/d3.min.js"></script> -->
+    <script src="static/js/jquery.flightindicators.js"></script>
+    <!-- <script src="js/bootstrap.min.js"></script>     -->
+    <link rel="stylesheet" href="static/css/flightindicator.css">
+</head>
+
+<body>
+
+    <div class="examples text-center">   <!--居中-->
+        <div>
+            <span id="airspeed"></span>  <!--空速表-->
+        </div>
+        <div>
+            <button id="airspeedButton" class="btn btn-default" type="submit">Button</button>  <!--按钮-->
+        </div>
+        <div>
+            <input type="file" id="file1" class="examples text-center" accept="*"/>
+        </div>
+        <div>
+            <progress id="pro" value="0"></progress>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script type="text/javascript">
+
+        var increment = 0;
+        var airspeed = $.flightIndicator('#airspeed', 'airspeed'); //调用该飞行仪表指示器插件
+
+
+        function sleep(milliseconds) {
+            var start = new Date().getTime();   //获取当前时间
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds) break;
+            }
+        }  //脚本延时函数
+
+        function doAirSpeed(){
+
+          var myInterval = setInterval(function() {
+
+            // Airspeed update设置计时器
+            airspeed.setAirSpeed(increment);
+            increment++;
+            
+            if(increment == 300){
+                clearInterval(myInterval); //清除计时器
+                sleep(1000);  //延迟1000毫秒
+                $("#airspeedButton").attr('disabled',false); //移除disable属性，按钮不可点击
+                $("#airspeedButton").text("Start");
+                increment = 0;
+                airspeed.setAirSpeed(0);
+            }
+
+            }, 50);//控制指针的旋转速度
+
+        }
+
+        $("#airspeedButton").text("Start");     //按钮显示为start
+        $("#airspeedButton").on("click", function() {
+            $("#airspeedButton").attr('disabled', true);  //添加disable属性，按钮可以点击
+            $("#airspeedButton").text("Playing");  //点击按钮显示为Playing
+            doAirSpeed();
+        });
+        
+  </script>
+
+</body>
+
+</html>
